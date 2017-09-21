@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals
 
-import sys
+import sys, uuid, time, json, os
 import semantria
-import uuid
-import time
 
 print("Semantria Detailed mode demo ...")
 print("")
 
 # the consumer key and secret
-consumerKey = ""
-consumerSecret = ""
+consumerKey = os.getenv('SEMANTRIA_KEY')
+consumerSecret = os.getenv('SEMANTRIA_SECRET')
 
 # Task statuses
 TASK_STATUS_UNDEFINED = 'UNDEFINED'
@@ -58,10 +56,12 @@ results = []
 tracker = {}
 documents = []
 
-print("Reading collection from file...")
-with open('source.txt') as f:
-	for line in f:
-		initialTexts.append(line)
+initialTexts = ['5739204 156443357 01-MAY-2017 Outlook response: "Hi James,~I have decided not to renew my membership at this time.~Thanks,~Kathryn Sanders"~']
+
+#print("Reading collection from file...")
+#with open('source.txt') as f:
+#	for line in f:
+#		initialTexts.append(line)
 
 for text in initialTexts:
     # Creates a sample document which need to be processed on Semantria
@@ -116,6 +116,10 @@ for data in results:
                 entity['title'], entity['entity_type'], entity['sentiment_score']
             ))
 
+    print("")
+
+    print("JSON:")
+    json.dump(data, sys.stdout, sort_keys=True, indent=4)    
     print("")
 
 print("Done!")
