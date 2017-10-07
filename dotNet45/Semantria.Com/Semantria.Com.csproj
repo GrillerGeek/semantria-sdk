@@ -79,6 +79,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\EventArgs.cs" />
     <Compile Include="Common\Interfaces.cs" />
+    <Compile Include="Common\StatsRequest.cs" />
     <Compile Include="Serializers\Json\DynamicJsonObject.cs" />
     <Compile Include="Serializers\Json\DynamicJsonObjectConverter.cs" />
     <Compile Include="Serializers\JsonSerializer.cs" />

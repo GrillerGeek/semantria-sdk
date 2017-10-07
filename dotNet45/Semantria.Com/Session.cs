@@ -6,6 +6,7 @@ using System.Collections;
 using System.Linq;
 using System.Net;
 using System.Web;
+using Semantria.Com.Common;
 
 namespace Semantria.Com
 {
@@ -216,22 +217,24 @@ namespace Semantria.Com
             return this.ProcessGetResponse(authResponse);
         }
 
-        public dynamic GetStatistics(string configId = null, string interval = null)
+        public dynamic GetStatistics(StatsRequest statsRequest)
         {
             //GET https://api.semantria.com/statistics.json
             string url = String.Format("{0}/statistics.{1}", _host, _format);
-            
-            if (!String.IsNullOrEmpty(configId) && !String.IsNullOrEmpty(interval))
+
+            switch (statsRequest.Method)
             {
-                url = String.Format("{0}/statistics.{1}?config_id={2}&interval={3}", _host, _format, configId, interval);
-            }
-            else if (!String.IsNullOrEmpty(configId))
-            {
-                url = String.Format("{0}/statistics.{1}?config_id={2}", _host, _format, configId);
-            }
-            else if (!String.IsNullOrEmpty(interval))
-            {
-                url = String.Format("{0}/statistics.{1}?interval={2}", _host, _format, interval);
+                case StatsMethod.GroupedRange:
+                    url = String.Format("{0}/statistics.{1}?from={2}&to={3}&group={4}", _host, _format, statsRequest.FromDate.ToString("O"), statsRequest.ToDate.ToString("O"), statsRequest.GroupBy);
+                    break;
+                case StatsMethod.Interval:
+                    url = String.Format("{0}/statistics.{1}?config_id={2}&interval={3}", _host, _format, statsRequest.ConfigId, statsRequest.Interval);
+                    break;
+                case StatsMethod.Range:
+                    url = String.Format("{0}/statistics.{1}?config_id={2}&from={3}&to={4}", _host, _format, statsRequest.ConfigId, statsRequest.FromDate, statsRequest.ToDate);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             
             AuthResponse authResponse = this.RunRequest(QueryMethod.GET, url, null);
